@@ -14,6 +14,23 @@ def filter_companies(companies, min_salary, max_overtime):
     return matched_companies
 
 
+def sort_companies(companies, sort_type):
+    if sort_type == "1":
+        return sorted(
+            companies,
+            key=lambda company: int(company["annual_salary"]),
+            reverse=True
+        )
+
+    if sort_type == "2":
+        return sorted(
+            companies,
+            key=lambda company: int(company["overtime_hours"])
+        )
+
+    return companies
+
+
 def main():
     min_salary = int(input("希望する最低年収を入力してください: "))
     max_overtime = int(input("希望する月の残業時間の上限を入力してください: "))
@@ -28,11 +45,27 @@ def main():
         max_overtime
     )
 
-    if matched_companies:
-        for company in matched_companies:
-            print(company["name"])
-    else:
+    if not matched_companies:
         print("条件に合う企業はありません")
+        return
+
+    print("並び替え方法を選んでください")
+    print("1: 年収が高い順")
+    print("2: 残業時間が少ない順")
+
+    sort_type = input("選択してください: ")
+
+    sorted_companies = sort_companies(
+        matched_companies,
+        sort_type
+    )
+
+    for company in sorted_companies:
+        print(
+            company["name"],
+            f'年収: {company["annual_salary"]}万円',
+            f'残業: {company["overtime_hours"]}時間'
+        )
 
 
 if __name__ == "__main__":
