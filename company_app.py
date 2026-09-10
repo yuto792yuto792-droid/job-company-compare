@@ -14,6 +14,15 @@ def filter_companies(companies, min_salary, max_overtime):
     return matched_companies
 
 
+def calculate_score(company):
+    annual_salary = int(company["annual_salary"])
+    overtime_hours = int(company["overtime_hours"])
+
+    score = annual_salary / 10 - overtime_hours
+
+    return score
+
+
 def sort_companies(companies, sort_type):
     if sort_type == "1":
         return sorted(
@@ -26,6 +35,13 @@ def sort_companies(companies, sort_type):
         return sorted(
             companies,
             key=lambda company: int(company["overtime_hours"])
+        )
+
+    if sort_type == "3":
+        return sorted(
+            companies,
+            key=calculate_score,
+            reverse=True
         )
 
     return companies
@@ -52,6 +68,7 @@ def main():
     print("並び替え方法を選んでください")
     print("1: 年収が高い順")
     print("2: 残業時間が少ない順")
+    print("3: 総合スコアが高い順")
 
     sort_type = input("選択してください: ")
 
@@ -61,10 +78,13 @@ def main():
     )
 
     for company in sorted_companies:
+        score = calculate_score(company)
+
         print(
             company["name"],
             f'年収: {company["annual_salary"]}万円',
-            f'残業: {company["overtime_hours"]}時間'
+            f'残業: {company["overtime_hours"]}時間',
+            f'スコア: {score:.1f}'
         )
 
 
