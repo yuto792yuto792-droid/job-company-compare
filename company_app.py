@@ -1,6 +1,21 @@
 import csv
 
 
+def get_valid_number(message):
+    while True:
+        try:
+            value = int(input(message))
+
+            if value < 0:
+                print("0以上の数字を入力してください")
+                continue
+
+            return value
+
+        except ValueError:
+            print("数字を入力してください")
+
+
 def filter_companies(companies, min_salary, max_overtime):
     matched_companies = []
 
@@ -48,8 +63,13 @@ def sort_companies(companies, sort_type):
 
 
 def main():
-    min_salary = int(input("希望する最低年収を入力してください: "))
-    max_overtime = int(input("希望する月の残業時間の上限を入力してください: "))
+    min_salary = get_valid_number(
+        "希望する最低年収を入力してください: "
+    )
+
+    max_overtime = get_valid_number(
+        "希望する月の残業時間の上限を入力してください: "
+    )
 
     with open("companies.csv", encoding="utf-8") as file:
         reader = csv.DictReader(file)
