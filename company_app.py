@@ -16,10 +16,27 @@ def get_valid_number(message):
             print("数字を入力してください")
 
 
+def is_valid_company(company):
+    try:
+        annual_salary = int(company["annual_salary"])
+        overtime_hours = int(company["overtime_hours"])
+
+        if annual_salary < 0 or overtime_hours < 0:
+            return False
+
+        return True
+
+    except (ValueError, TypeError, KeyError):
+        return False
+
+
 def filter_companies(companies, min_salary, max_overtime):
     matched_companies = []
 
     for company in companies:
+        if not is_valid_company(company):
+            continue
+
         annual_salary = int(company["annual_salary"])
         overtime_hours = int(company["overtime_hours"])
 
