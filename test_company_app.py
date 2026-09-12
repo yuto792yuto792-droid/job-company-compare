@@ -2,7 +2,8 @@ from company_app import (
     filter_companies,
     sort_companies,
     calculate_score,
-    get_valid_number
+    get_valid_number,
+    is_valid_company
 )
 
 def test_filter_companies():
@@ -152,3 +153,61 @@ def test_get_valid_number(monkeypatch):
     result = get_valid_number("数字を入力してください: ")
 
     assert result == 500
+
+def test_is_valid_company():
+    valid_company = {
+        "name": "A社",
+        "annual_salary": "600",
+        "overtime_hours": "10"
+    }
+
+    invalid_salary = {
+        "name": "B社",
+        "annual_salary": "",
+        "overtime_hours": "10"
+    }
+
+    invalid_overtime = {
+        "name": "C社",
+        "annual_salary": "600",
+        "overtime_hours": "abc"
+    }
+
+    negative_value = {
+        "name": "D社",
+        "annual_salary": "-100",
+        "overtime_hours": "10"
+    }
+
+    assert is_valid_company(valid_company) is True
+    assert is_valid_company(invalid_salary) is False
+    assert is_valid_company(invalid_overtime) is False
+    assert is_valid_company(negative_value) is False
+
+def test_filter_companies_skips_invalid_data():
+    companies = [
+        {
+            "name": "A社",
+            "annual_salary": "600",
+            "overtime_hours": "10"
+        },
+        {
+            "name": "B社",
+            "annual_salary": "",
+            "overtime_hours": "20"
+        },
+        {
+            "name": "C社",
+            "annual_salary": "700",
+            "overtime_hours": "abc"
+        }
+    ]
+
+    result = filter_companies(
+        companies,
+        min_salary=500,
+        max_overtime=20
+    )
+
+    assert len(result) == 1
+    assert result[0]["name"] == "A社"
