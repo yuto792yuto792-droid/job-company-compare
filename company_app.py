@@ -46,6 +46,17 @@ def filter_companies(companies, min_salary, max_overtime):
     return matched_companies
 
 
+def filter_by_industry(companies, industry):
+    if industry == "":
+        return companies
+
+    return [
+        company
+        for company in companies
+        if company["industry"] == industry
+    ]
+
+
 def calculate_score(company):
     annual_salary = int(company["annual_salary"])
     overtime_hours = int(company["overtime_hours"])
@@ -88,6 +99,10 @@ def main():
         "希望する月の残業時間の上限を入力してください: "
     )
 
+    industry = input(
+        "希望する業界を入力してください（指定なしはEnter）: "
+    )
+
     with open("companies.csv", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         companies = list(reader)
@@ -96,6 +111,11 @@ def main():
         companies,
         min_salary,
         max_overtime
+    )
+
+    matched_companies = filter_by_industry(
+        matched_companies,
+        industry
     )
 
     if not matched_companies:
@@ -119,8 +139,10 @@ def main():
 
         print(
             company["name"],
+            f'業界: {company["industry"]}',
             f'年収: {company["annual_salary"]}万円',
             f'残業: {company["overtime_hours"]}時間',
+            f'勤務地: {company["location"]}',
             f'スコア: {score:.1f}'
         )
 
