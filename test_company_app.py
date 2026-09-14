@@ -3,7 +3,8 @@ from company_app import (
     sort_companies,
     calculate_score,
     get_valid_number,
-    is_valid_company
+    is_valid_company,
+    filter_by_industry
 )
 
 def test_filter_companies():
@@ -211,3 +212,50 @@ def test_filter_companies_skips_invalid_data():
 
     assert len(result) == 1
     assert result[0]["name"] == "A社"
+
+def test_filter_by_industry():
+    companies = [
+        {
+            "name": "A社",
+            "industry": "IT",
+            "annual_salary": "600",
+            "overtime_hours": "10",
+            "location": "東京"
+        },
+        {
+            "name": "B社",
+            "industry": "金融",
+            "annual_salary": "700",
+            "overtime_hours": "20",
+            "location": "東京"
+        },
+        {
+            "name": "C社",
+            "industry": "IT",
+            "annual_salary": "650",
+            "overtime_hours": "15",
+            "location": "大阪"
+        }
+    ]
+
+    result = filter_by_industry(companies, "IT")
+
+    assert len(result) == 2
+    assert result[0]["name"] == "A社"
+    assert result[1]["name"] == "C社"
+
+def test_filter_by_industry_no_selection():
+    companies = [
+        {
+            "name": "A社",
+            "industry": "IT"
+        },
+        {
+            "name": "B社",
+            "industry": "金融"
+        }
+    ]
+
+    result = filter_by_industry(companies, "")
+
+    assert result == companies
