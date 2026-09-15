@@ -56,6 +56,16 @@ def filter_by_industry(companies, industry):
         if company["industry"] == industry
     ]
 
+def filter_by_location(companies, location):
+    if location == "":
+        return companies
+
+    return [
+        company
+        for company in companies
+        if company["location"] == location
+    ]
+
 
 def calculate_score(company):
     annual_salary = int(company["annual_salary"])
@@ -103,6 +113,10 @@ def main():
         "希望する業界を入力してください（指定なしはEnter）: "
     )
 
+    location = input(
+    "希望する勤務地を入力してください（指定なしはEnter）: "
+)
+
     with open("companies.csv", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         companies = list(reader)
@@ -117,6 +131,11 @@ def main():
         matched_companies,
         industry
     )
+
+    matched_companies = filter_by_location(
+    matched_companies,
+    location
+)
 
     if not matched_companies:
         print("条件に合う企業はありません")
