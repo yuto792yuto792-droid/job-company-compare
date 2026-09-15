@@ -4,7 +4,8 @@ from company_app import (
     calculate_score,
     get_valid_number,
     is_valid_company,
-    filter_by_industry
+    filter_by_industry,
+    filter_by_location
 )
 
 def test_filter_companies():
@@ -257,5 +258,44 @@ def test_filter_by_industry_no_selection():
     ]
 
     result = filter_by_industry(companies, "")
+
+    assert result == companies
+
+def test_filter_by_location():
+    companies = [
+        {
+            "name": "A社",
+            "location": "東京"
+        },
+        {
+            "name": "B社",
+            "location": "大阪"
+        },
+        {
+            "name": "C社",
+            "location": "東京"
+        }
+    ]
+
+    result = filter_by_location(companies, "東京")
+
+    assert len(result) == 2
+    assert result[0]["name"] == "A社"
+    assert result[1]["name"] == "C社"
+
+
+def test_filter_by_location_no_selection():
+    companies = [
+        {
+            "name": "A社",
+            "location": "東京"
+        },
+        {
+            "name": "B社",
+            "location": "大阪"
+        }
+    ]
+
+    result = filter_by_location(companies, "")
 
     assert result == companies
