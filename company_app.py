@@ -56,6 +56,7 @@ def filter_by_industry(companies, industry):
         if company["industry"] == industry
     ]
 
+
 def filter_by_location(companies, location):
     if location == "":
         return companies
@@ -100,6 +101,14 @@ def sort_companies(companies, sort_type):
     return companies
 
 
+def add_favorite(companies, company_name):
+    for company in companies:
+        if company["name"] == company_name:
+            return company
+
+    return None
+
+
 def main():
     min_salary = get_valid_number(
         "希望する最低年収を入力してください: "
@@ -114,8 +123,8 @@ def main():
     )
 
     location = input(
-    "希望する勤務地を入力してください（指定なしはEnter）: "
-)
+        "希望する勤務地を入力してください（指定なしはEnter）: "
+    )
 
     with open("companies.csv", encoding="utf-8") as file:
         reader = csv.DictReader(file)
@@ -133,9 +142,9 @@ def main():
     )
 
     matched_companies = filter_by_location(
-    matched_companies,
-    location
-)
+        matched_companies,
+        location
+    )
 
     if not matched_companies:
         print("条件に合う企業はありません")
@@ -153,6 +162,8 @@ def main():
         sort_type
     )
 
+    print("\n検索結果")
+
     for company in sorted_companies:
         score = calculate_score(company)
 
@@ -164,6 +175,31 @@ def main():
             f'勤務地: {company["location"]}',
             f'スコア: {score:.1f}'
         )
+
+    favorite_name = input(
+        "\nお気に入りに追加する企業名を入力してください"
+        "（追加しない場合はEnter）: "
+    )
+
+    favorites = []
+
+    if favorite_name != "":
+        favorite = add_favorite(
+            sorted_companies,
+            favorite_name
+        )
+
+        if favorite is not None:
+            favorites.append(favorite)
+            print(f"{favorite_name}をお気に入りに追加しました")
+        else:
+            print("その企業は検索結果にありません")
+
+    if favorites:
+        print("\nお気に入り企業")
+
+        for company in favorites:
+            print(company["name"])
 
 
 if __name__ == "__main__":

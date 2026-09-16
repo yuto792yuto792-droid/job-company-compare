@@ -5,7 +5,9 @@ from company_app import (
     get_valid_number,
     is_valid_company,
     filter_by_industry,
-    filter_by_location
+    filter_by_location,
+    add_favorite
+
 )
 
 def test_filter_companies():
@@ -299,3 +301,32 @@ def test_filter_by_location_no_selection():
     result = filter_by_location(companies, "")
 
     assert result == companies
+
+def test_add_favorite():
+    companies = [
+        {
+            "name": "A社"
+        },
+        {
+            "name": "B社"
+        }
+    ]
+
+    result = add_favorite(companies, "B社")
+
+    assert result is not None
+    assert result["name"] == "B社"
+
+def test_add_favorite_not_found():
+    companies = [
+        {
+            "name": "A社"
+        },
+        {
+            "name": "B社"
+        }
+    ]
+
+    result = add_favorite(companies, "C社")
+
+    assert result is None
